@@ -42,7 +42,9 @@ You will decide whether a query is a 'general' query, a 'realtime' query, or is 
 -> Respond with 'google search (topic)' if a query is asking to search a specific topic on google but if the query is asking to search multiple topics on google, respond with 'google search 1st topic, google search 2nd topic' and so on.
 -> Respond with 'youtube search (topic)' if a query is asking to search a specific topic on youtube or lecture topic or any topics of Study, but if the query is asking to search multiple topics on youtube, respond with 'youtube search 1st topic, youtube search 2nd topic' and so on.
 *** If the query is asking to perform multiple tasks like 'open facebook, telegram and close whatsapp' respond with 'open facebook, open telegram, close whatsapp' ***
-*** If the user is saying goodbye or wants to end the conversation like 'bye jarvis.' respond with 'exit'.***
+*** If the query is asking to perform multiple tasks like 'open facebook, and continue music' respond with 'open facebook, pause'
+*** If the query is asking to perform multiple tasks like 'open youtube, and play some music' respond with 'open youtube, play Allah ke Bande"
+*** If the user is saying goodbye or wants to end the conversation like 'aisha terminate' respond with 'exit'.***
 *** Respond with 'general (query)' if you can't decide the kind of query or if a query is asking to perform a task which is not mentioned above. ***
 """
 
@@ -61,7 +63,7 @@ ChatHistory = [
     {"role":"Chatbot", "message":"general chat with me."}
 ]
 
-def FirstLayerDMM(prompt: str = "test"):
+def FirstLayerDMM(prompt: str = "test"):  # sourcery skip: use-join
     #Add The user's query to the messages list.
     messages.append({"role":"user", "content": f"{prompt}"})
 
@@ -90,18 +92,11 @@ def FirstLayerDMM(prompt: str = "test"):
     temp = list()
 
     for task in response:
-        for func in keywords:
-            if task.startswith(func):
-                temp.append(task)
+        temp.extend(task for func in keywords if task.startswith(func))
     #Update the response with filtered tasks
     response = temp
 
-    if "(query)" in response:
-        newresponse = FirstLayerDMM(prompt=prompt)
-        return newresponse
-    else:
-        # Return the final response
-        return response
+    return FirstLayerDMM(prompt=prompt) if "(query)" in response else response
 
 if __name__ == "__main__":
     while True:
