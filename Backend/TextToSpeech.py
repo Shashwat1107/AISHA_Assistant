@@ -37,6 +37,7 @@ def TTS(Text, func= lambda r=None: True):
             print("{:-^30}".format("Error"))
             print(e)
             print("{:-^30}".format("Error"))
+            break
         finally:
             try:
                 func(False)
@@ -47,7 +48,7 @@ def TTS(Text, func= lambda r=None: True):
                 print("{:-^30}".format("Error"))
                 print(e)
                 print("{:-^30}".format("Error"))
-
+                break
 def TextToSpeech(Text, func=lambda r=None: True):
     Data = str(Text).split('.')
     pygame.mixer.quit()
