@@ -1,15 +1,14 @@
-from typing import override
+from typing import overload
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QStackedWidget, QWidget,QLineEdit, QGridLayout,\
    QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QFrame, QSizePolicy
-from PyQt5.QtGui import QIcon, QPainter, QMovie, QColor, QTextCharFormat, QFont, QPixmap, QTextBlockFormat
+from PyQt5.QtGui import QIcon, QMovie, QColor, QTextCharFormat, QFont, QPixmap, QTextBlockFormat
 from PyQt5.QtCore import Qt, QSize, QTimer
-
 from dotenv import dotenv_values
 import sys
 import os
+
 env_vars = dotenv_values(".env")
 Assistantname = env_vars.get( "Assistantname" )
-
 current_dir = os.getcwd()
 old_chat_message=" "
 TempDirPath = rf"{current_dir}\Frontend\Files"
@@ -84,6 +83,7 @@ class ChatSection(QWidget):
         super(ChatSection, self).__init__()
         layout = QVBoxLayout(self)
         layout.setContentsMargins(-10, 40, 40, 100)
+        layout.setSpacing(-100)
         self.chat_text_edit = QTextEdit()
         self.chat_text_edit.setReadOnly(True)
         self.chat_text_edit.setTextInteractionFlags(Qt.NoTextInteraction)
@@ -92,7 +92,7 @@ class ChatSection(QWidget):
         self.setStyleSheet("background-color: transparent;")
         layout.setSizeConstraint(QVBoxLayout.SetDefaultConstraint)
         layout.setStretch(1, 1)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.setSizePolicy(QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding))
         text_color = QColor(Qt.blue)
         text_color_text = QTextCharFormat()
         text_color_text.setForeground(text_color)
@@ -109,18 +109,18 @@ class ChatSection(QWidget):
         layout.addWidget(self.gif_label)
         self.label = QLabel("")
         self.label.setStyleSheet("color:white; font-size: 16px; margin-right: 195px; border: none; margin-top: -30px")
-        self.label.setAlignment(Qt.Alignment)
+        self.label.setAlignment(Qt.AlignRight)
         layout.addWidget(self.label)
         layout.setSpacing(-10)
         layout.addWidget(self.gif_label)
 
-        #time = 58:42
         font = QFont()
         font.setPointSize(13)
         self.chat_text_edit.setFont(font)
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.loadMessages)
         self.timer.timeout.connect(self.SpeechRecogText)
+        self.timer.start(5)
         self.chat_text_edit.viewport().installEventFilter(self)
         self.setStyleSheet("""
             QScrollBar:vertical {
@@ -130,7 +130,7 @@ class ChatSection(QWidget):
                 margin: 0px 0px 0px 0px;
             }
             QScrollBar::handle:vertical {
-                background: #888;
+                background: white;
                 min-height: 20px;
             }
             QScrollBar::add-line:vertical{
@@ -179,26 +179,26 @@ class ChatSection(QWidget):
     
     def load_icon(self, path, width=60, height=60):
         pixmap = QPixmap(path)
-        new_pixmap = pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        new_pixmap = pixmap.scaled(width, height)
         self.icon_label.setPixmap(new_pixmap)
 
     def toggle_icon(self, event=None):
          
         if self.toggled:
-            self.load_icon(GraphicsDirectoryPath('voice.png'), 60, 60)
+            self.load_icon(GraphicsDirectoryPath('mic on.png'), 60, 60)
             MicButtonInit()
         else:
-            self.load_icon(GraphicsDirectoryPath('mic.png'), 60, 60)
+            self.load_icon(GraphicsDirectoryPath('mic off.png'), 60, 60)
             MicButtonClosed()
         self.toggled = not self.toggled
     
     def addMessage(self, message, color='black'):
         cursor = self.chat_text_edit.textCursor()
-        format = QTextCharFormat()
+        format1 = QTextCharFormat()
         formatm = QTextBlockFormat()
         formatm.setTopMargin(10); formatm.setLeftMargin(10)
-        format.setForeground(QColor(color))
-        cursor.setCharFormat(format)
+        format1.setForeground(QColor(color))
+        cursor.setCharFormat(format1)
         cursor.setBlockFormat(formatm)
         cursor.insertText(message + '\n')
         self.chat_text_edit.setTextCursor(cursor)
@@ -208,8 +208,8 @@ class InitialScreen(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         desktop = QApplication.desktop()
-        screen_width = desktop.screenGeometry().width()//2
-        screen_height = desktop.screenGeometry().height()//2
+        screen_width = desktop.screenGeometry().width()
+        screen_height = desktop.screenGeometry().height()
         content_layout = QVBoxLayout()
         content_layout.setContentsMargins(0, 0, 0, 0)
         gif_label = QLabel()
@@ -223,7 +223,7 @@ class InitialScreen(QWidget):
         gif_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.icon_label = QLabel()
         pixmap = QPixmap(GraphicsDirectoryPath("mic on.png"))
-        new_pixmap = pixmap.scaled(60, 60, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        new_pixmap = pixmap.scaled(60, 60)
         self.icon_label.setPixmap(new_pixmap)
         self.icon_label.setFixedSize(150, 150)
         self.icon_label.setAlignment(Qt.AlignCenter)
@@ -254,15 +254,15 @@ class InitialScreen(QWidget):
     
     def load_icon(self, path, width=60, height=60):
         pixmap = QPixmap(path)
-        new_pixmap = pixmap.scaled(width, height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        new_pixmap = pixmap.scaled(width, height)
         self.icon_label.setPixmap(new_pixmap)
 
     def toggle_icon(self, event=None):
         if self.toggled:
-            self.load_icon(GraphicsDirectoryPath('voice.png'), 60, 60)
+            self.load_icon(GraphicsDirectoryPath('mic on.png'), 60, 60)
             MicButtonInit()
         else:
-            self.load_icon(GraphicsDirectoryPath('mic.png'), 60, 60)
+            self.load_icon(GraphicsDirectoryPath('mic off.png'), 60, 60)
             MicButtonClosed()
         self.toggled = not self.toggled
 
@@ -271,11 +271,11 @@ class MessageScreen(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         desktop = QApplication.desktop()
-        screen_width = desktop.screenGeometry().width()//2
-        screen_height = desktop.screenGeometry().height()//2
+        screen_width = desktop.screenGeometry().width()
+        screen_height = desktop.screenGeometry().height()
 
         layout = QVBoxLayout()
-        label = QLabel("")
+        label = QLabel("Hello There!!!")
 
         layout.addWidget(label)
         chat_section = ChatSection()
@@ -300,35 +300,34 @@ class CustomTopBar(QWidget):
 
         home_button = QPushButton()
         home_icon = QIcon(GraphicsDirectoryPath("Home.png"))
-
         home_button.setIcon(home_icon)
         home_button.setText("   Home")
         home_button.setStyleSheet("height:40px; line-height:40x; background-color:white; color:black")
+
         message_button = QPushButton()
         message_icon = QIcon(GraphicsDirectoryPath("Chats.png"))
-
         message_button.setIcon(message_icon)
         message_button.setText("    Chat")
         message_button.setStyleSheet("height:40px; line-height:40x; background-color:white; color:black")
 
-        minimize_button = QPushButton(); minimize_icon = QIcon(GraphicsDirectoryPath("Minimize.png"))
+        minimize_button = QPushButton(); minimize_icon = QIcon(GraphicsDirectoryPath("Minimize2.png"))
         minimize_button.setIcon(minimize_icon)
         minimize_button.clicked.connect(self.minimizeWindow)
 
         maximize_button = QPushButton(); maximize_icon = QIcon(GraphicsDirectoryPath("Maximize.png"))
         maximize_button.setIcon(maximize_icon)
-        maximize_button.clicked.connect(self.minimizeWindow)
+        maximize_button.clicked.connect(self.maximizeWindow)
 
         self.maximize_button = QPushButton()
         self.maximize_icon = QIcon(GraphicsDirectoryPath("Maximize.png"))
-        self.restore_icon = QIcon(GraphicsDirectoryPath("Minimize.png"))
+        self.restore_icon = QIcon(GraphicsDirectoryPath("Minimize2.png"))
         self.maximize_button.setIcon(self.maximize_icon)
         self.maximize_button.setFlat(True)
         self.maximize_button.setStyleSheet("background-color:white")
         self.maximize_button.clicked.connect(self.maximizeWindow)
 
         close_button = QPushButton(); close_icon = QIcon(GraphicsDirectoryPath("Close.png"))
-        close_button.setIcon(message_icon)
+        close_button.setIcon(close_icon)
         close_button.setStyleSheet("background-color:white")
         close_button.clicked.connect(self.closeWindow)
 
@@ -354,8 +353,82 @@ class CustomTopBar(QWidget):
         layout.addWidget(line_frame)
         self.draggable = True; self.offset = None
 
-    @override
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.fillRect(self.rect(), Qt.white)
+    
+    def minimizeWindow(self):
+        self.parent().showMinimized()
+        # super().showMinimized()
+    def maximizeWindow(self):
+        if self.parent().isMinimized():
+            super().showNormal()
+            self.maximize_button.setIcon(self.maximize_icon)
+
+        else:
+            self.parent().showMaximized()
+            self.maximize_button.setIcon(self.restore_icon)
+    
+    def closeWindow(self):
+        self.parent().close()
+    
+    def mousePressEvent(self, event):
+        if self.draggable:
+            self.offset = event.pos()
+    def mouseMoveEvent(self, event):
+        if self.draggable and self.offset:
+            new_pos = event.globalPos() - self.offset
+            self.parent().move(new_pos)
+
+    def showMessageScreen(self):
+        if self.current_screen is not None:
+            self.current_screen.hide()
         
+        message_screen = MessageScreen(self)
+        layout = self.parent().layout()
+        if layout is not None:
+            layout.addWidget(message_screen)
+        self.current_screen = message_screen
+
+    def showInitialScreen(self):
+        if self.current_screen is not None:
+            self.current_screen.hide()
+        
+        initScrn = InitialScreen(self)
+        layout = self.parent().layout()
+        if layout is not None:
+            layout.addWidget(initScrn)
+        self.current_screen = initScrn
+
+class MainWindow(QMainWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.initUI()
+    
+    def initUI(self):
+        desktop = QApplication.desktop()
+        screen_w = desktop.screenGeometry().width()
+        screen_h = desktop.screenGeometry().height()
+
+        stacked_widget = QStackedWidget(self)
+        initScrn = InitialScreen()
+
+        msgScrn = MessageScreen()
+        stacked_widget.addWidget(initScrn)
+        stacked_widget.addWidget(msgScrn)
+
+        self.setGeometry(0,0, screen_w , screen_h)
+        self.setStyleSheet('background-color:black;')
+        top_bar = CustomTopBar(self, stacked_widget)
+
+        self.setMenuWidget(top_bar)
+        self.setCentralWidget(stacked_widget)
+
+def GraphicalUserInerface():
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    GraphicalUserInerface()
+
