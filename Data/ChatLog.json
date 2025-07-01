@@ -102,5 +102,85 @@
     {
         "role": "assistant",
         "content": "According to the search results, the current stock price of Redington share is \u20b9299."
+    },
+    {
+        "role": "user",
+        "content": "Who is the current president of india?"
+    },
+    {
+        "role": "assistant",
+        "content": "According to the search results, the current President of India is Droupadi Murmu, who has been serving as the 15th President of India since July 25, 2022."
+    },
+    {
+        "role": "user",
+        "content": "Kashikar ko door karne ka paper shotgun how are you?"
+    },
+    {
+        "role": "assistant",
+        "content": "I think you're trying to say \"Kaagaz karne ko door karne ka paper shotgun, how are you?\" which is a mix of Hindi and English. The phrase \"Kaagaz karne ko door karne ka paper shotgun\" doesn't make sense, but I think you're trying to ask how I'm doing. I'm doing fine, thanks for asking!"
+    },
+    {
+        "role": "user",
+        "content": "Can you tell me current price of tesla shares?"
+    },
+    {
+        "role": "assistant",
+        "content": "According to the search results, the current price of Tesla shares (TSLA) is $317.66."
+    },
+    {
+        "role": "user",
+        "content": "When is doctor's day?"
+    },
+    {
+        "role": "assistant",
+        "content": "According to the search results, Doctor's Day is celebrated on July 1 in India."
+    },
+    {
+        "role": "user",
+        "content": "Piya piya piya ki mala."
+    },
+    {
+        "role": "assistant",
+        "content": "I recognize that! \"Piya piya piya ki mala\" is a famous Bollywood song from the 1964 film \"Baadal\". The song was sung by Lata Mangeshkar and composed by Chitragupt."
+    },
+    {
+        "role": "user",
+        "content": "Aisha."
+    },
+    {
+        "role": "assistant",
+        "content": "You're addressing me! I'm AISHA, your friendly AI chatbot. How can I assist you further?"
+    },
+    {
+        "role": "user",
+        "content": "Look in it."
+    },
+    {
+        "role": "assistant",
+        "content": "You want me to look into something. Please provide more context or clarify what you'd like me to look into, and I'll do my best to assist you!"
+    },
+    {
+        "role": "user",
+        "content": "Then."
+    },
+    {
+        "role": "assistant",
+        "content": "It seems like you're expecting a response or an action from me. However, I'm not sure what you're referring to. Could you please provide more context or clarify what you mean by \"then\"? I'll do my best to help!"
+    },
+    {
+        "role": "user",
+        "content": "Hello story."
+    },
+    {
+        "role": "assistant",
+        "content": "It seems like you're starting a new conversation or topic! \"Hello story\" is an interesting phrase. Are you looking to share a story, hear a story, or explore a particular topic related to stories? I'm all ears!"
+    },
+    {
+        "role": "user",
+        "content": "Muthu."
+    },
+    {
+        "role": "assistant",
+        "content": "Muthu! That's a popular Tamil name. Are you referring to someone named Muthu, or perhaps the 1995 Tamil film \"Muthu\" starring Rajinikanth?"
     }
 ]

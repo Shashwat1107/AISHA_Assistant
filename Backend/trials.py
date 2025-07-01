@@ -42,17 +42,27 @@ useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
 
 
 "----------------------"
-def search_bing(query):
-    headers = {'User-Agent': useragent}
-    url = f"https://www.bing.com/search?q={query}"
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    results = soup.find_all('li', {'class': 'b_algo'})
+# def search_bing(query):
+#     headers = {'User-Agent': useragent}
+#     url = f"https://www.bing.com/search?q={query}"
+#     response = requests.get(url, headers=headers)
+#     soup = BeautifulSoup(response.text, 'html.parser')
+#     results = soup.find_all('li', {'class': 'b_algo'})
 
-    for r in results:
-        link = r.find('a')
-        if link:
-            print("Opening:", link['href'])
-            webopen(link['href'])
-            break
-search_bing("facebook")
+#     for r in results:
+#         link = r.find('a')
+#         if link:
+#             print("Opening:", link['href'])
+#             webopen(link['href'])
+#             break
+# search_bing("facebook")
+"----------------------------------"
+from dotenv import dotenv_values
+from groq import Groq
+env_vars = dotenv_values('.env')
+
+GroqAPI = env_vars.get('GroqAPIKey')
+client = Groq(api_key=GroqAPI)
+
+for m in client.models.list().data:
+        print(m.id)

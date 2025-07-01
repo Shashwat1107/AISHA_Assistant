@@ -9,10 +9,49 @@ import webbrowser
 import requests
 import subprocess
 import keyboard
-from volume_control import VolumeController
+import pyautogui
 import asyncio
 import os
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
+class VolumeController:
+    def __init__(self):
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(
+            IAudioEndpointVolume._iid_, CLSCTX_ALL, None
+            )
+        self.volume = cast(interface, POINTER(IAudioEndpointVolume))
+    def get_volume(self):    
+        return self.volume.GetMasterVolumeLevelScalar()
+    def volume_up(self):
+        self.volume.SetMasterVolumeLevelScalar(min(self.get_volume() + 0.15, 1.0), None)
+
+    def volume_down(self):
+        self.volume.SetMasterVolumeLevelScalar(max(self.get_volume() - 0.15, 0.0), None)        
+
+    def volume_up_a_bit(self):
+        self.volume.SetMasterVolumeLevelScalar(min(self.get_volume() + 0.05, 1.0), None)
+    def volume_down_a_bit(self):
+        self.volume.SetMasterVolumeLevelScalar(max(self.get_volume() - 0.05, 0.0), None)
+        
+    def volume_to(self, to:float):
+        """
+        This sets the volume to a specific level, But Provide the said/10 value where said is the level set by the user
+        0 < said < 100.
+        """
+        if 0 <= to <= 1:
+            self.volume.SetMasterVolumeLevelScalar(to, None)
+        else:
+            raise ValueError("Volume level must be between 0.0 and 1.0")
+    
+    def mute(self):
+        self.volume.SetMute(1, None)
+    def unmute(self):
+        self.volume.SetMute(0, None)
+
+"------------------------------------------------------------------------------------------------------------------------------------"
 env_vars = dotenv_values(".env")
 GroqAPIKey = env_vars.get("GroqAPIKey", "")
 
@@ -47,7 +86,7 @@ def Content(Topic):
         messages.append({"role": "user", "content": f"{prompt}"})
 
         completion = client.chat.completions.create(
-            model='mixtral-8x7b-32768',
+            model='llama3-8b-8192',
             messages=messages,
             max_tokens=2048,
             temperature=0.7,
@@ -62,6 +101,8 @@ def Content(Topic):
                 Answer += chunck.choices[0].delta.content
         
         Answer = Answer.replace("</s>", "")
+
+        return Answer
     
     Topic = Topic.replace("Content ", "")
     ContentByAI = ContentWriterAI(Topic)
@@ -79,9 +120,9 @@ def YoutubeSearch(Topic):
 
 def PlayOnYoutube(Topic):
     try:
-        if Topic.__contains__("Hanuman Chalisa"):
+        if Topic.__contains__("hanuman chalisa"):
             webbrowser.open("https://www.youtube.com/watch?v=1Uh03H6R23g&list=RD1Uh03H6R23g&start_radio=1")
-        elif Topic.__contains__("Bajrang Baan"):
+        elif Topic.__contains__("bajrang baan"):
             webbrowser.open("https://youtu.be/dXl2NdlmeIE?si=nL8STeQ4RcDwy1vZ")
         else:
             playonyt(Topic)
@@ -89,6 +130,8 @@ def PlayOnYoutube(Topic):
     except Exception as e:
         print(f"[red]Error playing on YouTube: {e}[/red]")
         return False # Example usage, can be removed later
+
+
 def OpenApp(app):
     try:
         if app.lower() == "youtube":
@@ -136,12 +179,17 @@ def System(command):
         volume.volume_up_a_bit()
     elif command == 'decrease volume a bit':
         volume.volume_down_a_bit()
-    elif command == 'full volume':
+    elif command == 'full volume' or command == 'max volume' or command == 'make volume full':
         volume.volume_to(1.0)
     if command == 'shut down computer':
         os.system("shutdown /s /t 1")
     elif command == 'minimize all':
         keyboard.send('win + d')
+
+    elif command == 'pause' or command == 'play' or command.__contains__("continue"):
+        pyautogui.press('playpause')
+        
+    
 async def TranslateAndExecute(commands: list[str]):
     """
     "exit", "general", "realtime", "open", "close", "play", "pause",

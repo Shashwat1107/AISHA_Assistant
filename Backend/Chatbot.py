@@ -92,7 +92,7 @@ def ChatBot(query):  # sourcery skip: extract-method, use-join
         return AnswerModifier(Answer) # Return the modified answer
     except Exception as e:
         print(f"Error: {e}")
-        with open(r"Data/ChatLog.json", 'w') as file:
+        with open(r"Data\ChatLog.json", 'w') as file:
             dump([], file, indent=4) # Reset the chat log on error
         return ChatBot(query)
     

@@ -13,5 +13,6 @@ mtranslate
 pygame
 edge-tts
 PyQt5
+pyautogui
 webdriver-manager
 googlesearch-python

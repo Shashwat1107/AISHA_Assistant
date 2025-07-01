@@ -100,5 +100,3 @@ def FirstLayerDMM(prompt: str = "test"):  # sourcery skip: use-join
 if __name__ == "__main__":
     while True:
         print(FirstLayerDMM(input(">>> ")))
-
-"continue from 22:57"

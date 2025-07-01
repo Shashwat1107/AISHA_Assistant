@@ -23,10 +23,10 @@ System = f"""Hello, I am {Username}, You are a very accurate and advanced AI cha
 *** Just answer the question from the provided data in a professional way. ***"""
 
 try:
-    with open(r'Data/ChatLog.json', 'r') as file:
+    with open(r'Data\ChatLog.json', 'r') as file:
         messages = load(file)
 except FileNotFoundError:
-    with open(r'Data/ChatLog.json', 'w') as file:
+    with open(r'Data\ChatLog.json', 'w') as file:
         dump([], file)
 
 def GoogleSearch(query):
